@@ -1,1 +1,172 @@
 /* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================================
+   BASE COMPONENT STYLES
+================================ */
+
+.input {
+  @apply w-full px-4 py-2 border border-slate-300 rounded-md
+         focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.btn-preview {
+  @apply px-6 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition;
+  width: auto;
+}
+
+@media (max-width: 768px) {
+  .btn-preview {
+    width: 100%;
+  }
+}
+
+
+.btn-edit {
+  @apply px-5 py-2 rounded-md border border-slate-300 text-slate-600 hover:bg-slate-100 transition;
+}
+
+.btn-confirm {
+  @apply px-5 py-2 rounded-md bg-green-600 text-white hover:bg-green-700 transition;
+}
+
+/* Toast fix */
+.toast-top-right {
+  z-index: 99999 !important;
+}
+
+/* ================================
+   GLOBAL SAFETY RULES
+================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Inputs & selects are always full width */
+.input,
+select {
+  width: 100%;
+}
+
+/* Buttons default (PC & Tablet) */
+button {
+  width: auto;
+}
+
+/* ================================
+   TABLET DEVICES (≤ 1024px)
+================================ */
+@media (max-width: 1024px) {
+
+  .max-w-3xl {
+    max-width: 95%;
+  }
+
+  table th,
+  table td {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .px-6 {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* ================================
+   MOBILE DEVICES (≤ 768px)
+================================ */
+@media (max-width: 768px) {
+
+  /* Stack form fields */
+  form.grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Header layout stacks */
+  .flex.justify-between {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  /* Buttons become full width ONLY on mobile */
+  button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Location section fix */
+  .md\\:col-span-2 {
+    grid-column: span 1 !important;
+  }
+
+  /* Preview & confirm buttons stack */
+  .flex.justify-end {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Table horizontal scroll */
+  .overflow-x-auto {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 900px;
+  }
+}
+
+/* ================================
+   SMALL MOBILE (≤ 480px)
+================================ */
+@media (max-width: 480px) {
+
+  h2 {
+    font-size: 18px;
+  }
+
+  .text-sm {
+    font-size: 12px;
+  }
+
+  .px-6 {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .py-4 {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  /* Modal fits small screens */
+  .animate-modal-slide-up {
+    max-width: 95vw;
+    max-height: 95vh;
+  }
+
+  /* Pagination buttons */
+  .pagination button {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+

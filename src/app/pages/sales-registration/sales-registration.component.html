@@ -1,0 +1,172 @@
+<div class="min-h-screen bg-slate-50 flex justify-center p-6">
+  <div class="w-full max-w-3xl bg-white p-8 rounded-xl shadow">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-semibold">Sales Registration</h2>
+      <button
+        type="button"
+        (click)="goToDashboard()"
+        class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+      >
+        View Dashboard
+      </button>
+    </div>
+
+    <!-- FORM -->
+    <form
+      *ngIf="!previewMode"
+      [formGroup]="salesForm"
+      class="grid md:grid-cols-2 gap-4"
+    >
+
+    <!-- ASM Name -->
+<div>
+  <input
+    class="input"
+    placeholder="ASM Name"
+    formControlName="asmname"
+  />
+  <p
+    *ngIf="
+      salesForm.get('asmname')?.touched &&
+      salesForm.get('asmname')?.hasError('required')
+    "
+    class="text-xs text-red-500"
+  >
+    ASM name is required
+  </p>
+</div>
+<!-- Dealer Name -->
+<div>
+  <input
+    class="input"
+    placeholder="Dealer Name"
+    formControlName="dealerName"
+  />
+  <p
+    *ngIf="
+      salesForm.get('dealerName')?.touched &&
+      salesForm.get('dealerName')?.hasError('required')
+    "
+    class="text-xs text-red-500"
+  >
+    Dealer name is required
+  </p>
+</div>
+
+      <!-- Contact Person -->
+      <div>
+        <input class="input" placeholder="Contact Person" formControlName="contactPerson" />
+        <p *ngIf="salesForm.get('contactPerson')?.touched &&
+                  salesForm.get('contactPerson')?.hasError('required')"
+           class="text-xs text-red-500">
+          Contact person name is required
+        </p>
+      </div>
+
+      <!-- Designation -->
+      <select class="input" formControlName="designation">
+        <option value="">Select Designation</option>
+        <option *ngFor="let d of designations" [value]="d">
+          {{ d }}
+        </option>
+      </select>
+
+      <!-- Contact Number -->
+      <div>
+        <input
+          class="input"
+          placeholder="Contact Number"
+          maxlength="10"
+          formControlName="contactNumber"
+        />
+        <p *ngIf="salesForm.get('contactNumber')?.touched &&
+                  salesForm.get('contactNumber')?.errors"
+           class="text-xs text-red-500">
+          Contact number must be exactly 10 digits
+        </p>
+      </div>
+
+      <!-- State -->
+      <select class="input" formControlName="state">
+        <option value="">Select State</option>
+        <option *ngFor="let s of states" [value]="s.name">
+          {{ s.name }}
+        </option>
+      </select>
+
+      <!-- City -->
+      <input class="input" placeholder="City" formControlName="city" />
+
+      <!-- OEM -->
+      <div>
+        <select class="input" formControlName="oem">
+          <option value="">Select OEM</option>
+          <option *ngFor="let o of oems" [value]="o._id">
+            {{ o.name }}
+          </option>
+        </select>
+        <p *ngIf="salesForm.get('oem')?.touched &&
+                  salesForm.get('oem')?.hasError('required')"
+           class="text-xs text-red-500">
+          OEM selection is mandatory
+        </p>
+      </div>
+
+      <!-- Email -->
+      <input class="input" type="email" placeholder="Email" formControlName="email" />
+<!-- Auto Captured Location -->
+<div class="md:col-span-2 bg-gray-50 p-3 rounded border">
+  <p class="text-sm font-medium text-gray-600 mb-1">
+    Area Sales Manager Location 
+  </p>
+
+  <p class="text-xs text-gray-500">
+    Latitude: {{ salesForm.value.latitude || 'Fetching...' }}
+  </p>
+  <p class="text-xs text-gray-500">
+    Longitude: {{ salesForm.value.longitude || 'Fetching...' }}
+  </p>
+</div>
+
+      <!-- Preview Button -->
+      <div class="md:col-span-2 text-right">
+        <button
+          type="button"
+          class="btn-preview"
+          (click)="showPreview()"
+          [disabled]="salesForm.invalid"
+        >
+          Preview
+        </button>
+      </div>
+
+    </form>
+
+    <!-- PREVIEW -->
+    <div *ngIf="previewMode" class="bg-slate-50 p-6 rounded-xl border">
+      <h3 class="text-lg font-semibold mb-4">Review Sales Details</h3>
+
+      <div class="grid grid-cols-2 gap-4 text-sm">
+      
+        <div><b>Dealer Name:</b> {{ salesForm.value.dealerName }}</div>
+        <div><b>Contact Person:</b> {{ salesForm.value.contactPerson }}</div>
+        <div><b>Designation:</b> {{ salesForm.value.designation }}</div>
+        <div><b>Contact Number:</b> {{ salesForm.value.contactNumber }}</div>
+        <div><b>State:</b> {{ salesForm.value.state }}</div>
+        <div><b>City:</b> {{ salesForm.value.city }}</div>
+        <div><b>Email:</b> {{ salesForm.value.email }}</div>
+        <div><b>Status:</b> {{ salesForm.value.status }}</div>
+      </div>
+
+      <div class="flex justify-end gap-3 mt-6">
+        <button class="btn-edit" (click)="previewMode = false">Edit</button>
+        <button class="btn-confirm" (click)="submitForm()">Confirm & Send</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
