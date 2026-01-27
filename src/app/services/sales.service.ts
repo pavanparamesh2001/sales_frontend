@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 export class SalesService {
 
   private baseUrl = 'http://localhost:3000/api';
+  
 
   constructor(private http: HttpClient) {}
 

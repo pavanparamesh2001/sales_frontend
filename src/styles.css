@@ -1,4 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
+/* Tailwind base */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,22 +7,24 @@
    BASE COMPONENT STYLES
 ================================ */
 
+/* INPUTS ONLY */
 .input {
   @apply w-full px-4 py-2 border border-slate-300 rounded-md
          focus:outline-none focus:ring-2 focus:ring-blue-500;
 }
 
+/* SELECTS (separate from .input — IMPORTANT for mobile) */
+.select-input {
+  @apply w-full px-4 py-2 border border-slate-300 rounded-md bg-white;
+  appearance: auto;
+  -webkit-appearance: auto;
+  -moz-appearance: auto;
+}
+
+/* Buttons */
 .btn-preview {
   @apply px-6 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition;
-  width: auto;
 }
-
-@media (max-width: 768px) {
-  .btn-preview {
-    width: 100%;
-  }
-}
-
 
 .btn-edit {
   @apply px-5 py-2 rounded-md border border-slate-300 text-slate-600 hover:bg-slate-100 transition;
@@ -53,15 +55,13 @@ body {
   overflow-x: hidden;
 }
 
-/* Inputs & selects are always full width */
-.input,
-select {
-  width: 100%;
-}
+/* ❌ REMOVED: `.input, select { width: 100%; }`
+   This was breaking mobile dropdowns */
 
 /* Buttons default (PC & Tablet) */
 button {
   width: auto;
+  max-width: fit-content;
 }
 
 /* ================================
@@ -106,14 +106,16 @@ button {
     font-size: 20px;
   }
 
-  /* Buttons become full width ONLY on mobile */
-  button {
+  /* Buttons full width ONLY where needed */
+  .btn-preview,
+  .btn-confirm,
+  .btn-edit {
     width: 100%;
     justify-content: center;
   }
 
   /* Location section fix */
-  .md\\:col-span-2 {
+  .md\:col-span-2 {
     grid-column: span 1 !important;
   }
 
@@ -123,14 +125,19 @@ button {
     gap: 10px;
   }
 
-  /* Table horizontal scroll */
+  /* TABLE FIX — prevent merging */
   .overflow-x-auto {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
 
   table {
-    min-width: 900px;
+    min-width: 1100px;
+  }
+
+  th,
+  td {
+    white-space: nowrap;
   }
 }
 

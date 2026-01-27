@@ -89,7 +89,8 @@
       </div>
 
       <!-- State -->
-      <select class="input" formControlName="state">
+      <select class="select-input" formControlName="state">
+
         <option value="">Select State</option>
         <option *ngFor="let s of states" [value]="s.name">
           {{ s.name }}
@@ -101,7 +102,8 @@
 
       <!-- OEM -->
       <div>
-        <select class="input" formControlName="oem">
+       <select class="select-input" formControlName="oem">
+
           <option value="">Select OEM</option>
           <option *ngFor="let o of oems" [value]="o._id">
             {{ o.name }}
