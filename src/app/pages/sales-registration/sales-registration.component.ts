@@ -32,7 +32,7 @@ export class SalesRegistrationComponent implements OnInit {
     this.salesService.getOEMs().subscribe(oems => this.oems = oems);
     this.salesService.getStates().subscribe(states => this.states = states);
      // ✅ AUTO-CAPTURE LOCATION WHEN APP RUNS
-  this.captureLiveLocation();
+  //this.captureLiveLocation();
   }
 
   createForm() {
@@ -72,24 +72,72 @@ export class SalesRegistrationComponent implements OnInit {
     this.previewMode = true;
   }
 
-  submitForm() {
-  if (this.salesForm.invalid) return;
+//   submitForm() {
+//   if (this.salesForm.invalid) return;
+
+//   const { latitude, longitude, ...rest } = this.salesForm.value;
+
+//   const payload = {
+//     ...rest,
+
+//     // ✅ GeoJSON location
+//     location: {
+//       type: 'Point',
+//       coordinates: [longitude, latitude] // [lng, lat]
+//     },
+
+//     // ✅ Geo API Metadata (NOW WILL BE SAVED)
+//     geoApiMetaData: {
+//       source: 'browser-geolocation',
+//       accuracy: 'high',
+//       latitude,
+//       longitude,
+//       capturedAt: new Date().toISOString(),
+//       userAgent: navigator.userAgent
+//     }
+//   };
+
+//   // ✅ SEND PAYLOAD (FIX)
+//   this.salesService.createSales(payload).subscribe({
+//     next: () => {
+//       this.toastr.success('Sales registration submitted successfully');
+//       this.previewMode = false;
+//       this.salesForm.reset({ status: 'Submitted' });
+//     },
+//     error: () => {
+//       this.toastr.error('Failed to submit sales details');
+//     }
+//   });
+// }
+submitForm() {
+
+  // ❌ Stop if form invalid
+  if (this.salesForm.invalid) {
+    this.salesForm.markAllAsTouched();
+    return;
+  }
 
   const { latitude, longitude, ...rest } = this.salesForm.value;
+
+  // ❌ Stop if location not captured (VERY IMPORTANT FOR MOBILE)
+  if (!latitude || !longitude) {
+    this.toastr.error('Please capture location before submitting');
+    return;
+  }
 
   const payload = {
     ...rest,
 
-    // ✅ GeoJSON location
+    // ✅ GeoJSON location (MongoDB compatible)
     location: {
       type: 'Point',
       coordinates: [longitude, latitude] // [lng, lat]
     },
 
-    // ✅ Geo API Metadata (NOW WILL BE SAVED)
+    // ✅ Geo API Metadata
     geoApiMetaData: {
       source: 'browser-geolocation',
-      accuracy: 'high',
+      accuracy: 'standard', // better for mobile
       latitude,
       longitude,
       capturedAt: new Date().toISOString(),
@@ -97,12 +145,17 @@ export class SalesRegistrationComponent implements OnInit {
     }
   };
 
-  // ✅ SEND PAYLOAD (FIX)
+  // ✅ API CALL
   this.salesService.createSales(payload).subscribe({
     next: () => {
       this.toastr.success('Sales registration submitted successfully');
+
+      // reset but keep status
+      this.salesForm.reset({
+        status: 'Submitted'
+      });
+
       this.previewMode = false;
-      this.salesForm.reset({ status: 'Submitted' });
     },
     error: () => {
       this.toastr.error('Failed to submit sales details');
@@ -111,12 +164,41 @@ export class SalesRegistrationComponent implements OnInit {
 }
 
 
+
   goToDashboard() {
     this.router.navigate(['/dashboard']);
   }
-  captureLiveLocation() {
+//   captureLiveLocation() {
+//   if (!navigator.geolocation) {
+//     this.toastr.error('Geolocation not supported');
+//     return;
+//   }
+
+//   navigator.geolocation.getCurrentPosition(
+//     (position) => {
+//       this.salesForm.patchValue({
+//         latitude: position.coords.latitude,
+//         longitude: position.coords.longitude
+//       });
+
+//       console.log('Location captured:', position.coords);
+//     },
+//     (error) => {
+//       this.toastr.error('Failed to capture location');
+//       console.error(error);
+//     },
+//     {
+//       enableHighAccuracy: true,
+//       timeout: 15000,
+//       maximumAge: 0
+//     }
+//   );
+// }
+
+
+captureLiveLocation() {
   if (!navigator.geolocation) {
-    this.toastr.error('Geolocation not supported by browser');
+    this.toastr.error('Geolocation not supported');
     return;
   }
 
@@ -127,21 +209,30 @@ export class SalesRegistrationComponent implements OnInit {
         longitude: position.coords.longitude
       });
 
-      console.log('Location captured:', position.coords);
+      this.toastr.success('Location captured successfully');
     },
     (error) => {
-      this.toastr.error('Failed to capture location');
-      console.error(error);
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          this.toastr.error('Location permission denied');
+          break;
+        case error.POSITION_UNAVAILABLE:
+          this.toastr.error('Location unavailable');
+          break;
+        case error.TIMEOUT:
+          this.toastr.error('Location request timed out');
+          break;
+        default:
+          this.toastr.error('Failed to get location');
+      }
     },
     {
-      enableHighAccuracy: true,
-      timeout: 15000,
-      maximumAge: 0
+      enableHighAccuracy: false, // 🔥 important for mobile
+      timeout: 20000,
+      maximumAge: 60000
     }
   );
 }
-
-
 
 }
 

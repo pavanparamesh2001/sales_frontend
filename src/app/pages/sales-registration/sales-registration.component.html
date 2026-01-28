@@ -119,7 +119,7 @@
       <!-- Email -->
       <input class="input" type="email" placeholder="Email" formControlName="email" />
 <!-- Auto Captured Location -->
-<div class="md:col-span-2 bg-gray-50 p-3 rounded border">
+<!-- <div class="md:col-span-2 bg-gray-50 p-3 rounded border">
   <p class="text-sm font-medium text-gray-600 mb-1">
     Area Sales Manager Location 
   </p>
@@ -130,7 +130,28 @@
   <p class="text-xs text-gray-500">
     Longitude: {{ salesForm.value.longitude || 'Fetching...' }}
   </p>
+</div> -->
+<div class="md:col-span-2 bg-gray-50 p-3 rounded border">
+  <p class="text-sm font-medium text-gray-600 mb-2">
+    Area Sales Manager Location
+  </p>
+
+  <button
+    type="button"
+    class="px-3 py-1 mb-2 text-sm bg-blue-600 text-white rounded"
+    (click)="captureLiveLocation()"
+  >
+    Capture Location
+  </button>
+
+  <p class="text-xs text-gray-500">
+    Latitude: {{ salesForm.value.latitude || 'Not captured' }}
+  </p>
+  <p class="text-xs text-gray-500">
+    Longitude: {{ salesForm.value.longitude || 'Not captured' }}
+  </p>
 </div>
+
 
       <!-- Preview Button -->
       <div class="md:col-span-2 text-right">
