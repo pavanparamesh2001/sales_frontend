@@ -60,17 +60,50 @@ export class SalesRegistrationComponent implements OnInit {
     
     latitude: [''],
     longitude: [''],
+    mapLink: [''],
       status: ['Submitted']
     });
   }
 
-  showPreview() {
-    if (this.salesForm.invalid) {
-      this.salesForm.markAllAsTouched();
-      return;
-    }
-    this.previewMode = true;
+showPreview() {
+  if (this.salesForm.invalid) {
+    this.salesForm.markAllAsTouched();
+    return;
   }
+
+  if (!navigator.geolocation) {
+    this.toastr.error('Geolocation not supported');
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      // 🔗 Google Maps live link
+      const mapLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+
+      // ✅ Patch into form (NO UI change)
+      this.salesForm.patchValue({
+        latitude,
+        longitude,
+        mapLink
+      });
+
+      this.previewMode = true;
+    },
+    (error) => {
+      this.toastr.error('Unable to capture location. Please allow location access.');
+    },
+    {
+      enableHighAccuracy: false,
+      timeout: 15000,
+      maximumAge: 60000
+    }
+  );
+}
+
 
 //   submitForm() {
 //   if (this.salesForm.invalid) return;
@@ -111,50 +144,47 @@ export class SalesRegistrationComponent implements OnInit {
 // }
 submitForm() {
 
-  // ❌ Stop if form invalid
   if (this.salesForm.invalid) {
     this.salesForm.markAllAsTouched();
     return;
   }
 
-  const { latitude, longitude, ...rest } = this.salesForm.value;
+  // ✅ Extract mapLink properly
+  const { latitude, longitude, mapLink, ...rest } = this.salesForm.value;
 
-  // ❌ Stop if location not captured (VERY IMPORTANT FOR MOBILE)
-  if (!latitude || !longitude) {
-    this.toastr.error('Please capture location before submitting');
+  if (!latitude || !longitude || !mapLink) {
+    this.toastr.error('Location not captured');
     return;
   }
 
   const payload = {
     ...rest,
 
-    // ✅ GeoJSON location (MongoDB compatible)
+    // ✅ GeoJSON location
     location: {
       type: 'Point',
-      coordinates: [longitude, latitude] // [lng, lat]
+      coordinates: [longitude, latitude]
     },
 
     // ✅ Geo API Metadata
     geoApiMetaData: {
       source: 'browser-geolocation',
-      accuracy: 'standard', // better for mobile
+      accuracy: 'standard',
       latitude,
       longitude,
+      mapLink,
       capturedAt: new Date().toISOString(),
       userAgent: navigator.userAgent
-    }
+    },
+
+    // ✅ Store map link directly
+    mapLink
   };
 
-  // ✅ API CALL
   this.salesService.createSales(payload).subscribe({
     next: () => {
       this.toastr.success('Sales registration submitted successfully');
-
-      // reset but keep status
-      this.salesForm.reset({
-        status: 'Submitted'
-      });
-
+      this.salesForm.reset({ status: 'Submitted' });
       this.previewMode = false;
     },
     error: () => {

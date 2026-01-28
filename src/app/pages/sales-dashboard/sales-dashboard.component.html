@@ -334,25 +334,75 @@
         </div>
 
         <!-- Location Information -->
-        <div class="bg-green-50 rounded-lg p-4 border border-green-200">
-          <h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            Location Information
-          </h4>
-          <div class="grid md:grid-cols-2 gap-4">
-            <div>
-              <label class="text-xs font-medium text-gray-500 uppercase">State</label>
-              <p class="text-sm text-gray-900 mt-1 font-medium">{{ selectedSale.state || '-' }}</p>
-            </div>
-            <div>
-              <label class="text-xs font-medium text-gray-500 uppercase">City</label>
-              <p class="text-sm text-gray-900 mt-1 font-medium">{{ selectedSale.city || '-' }}</p>
-            </div>
-          </div>
-        </div>
+       <!-- Location Information -->
+<div class="bg-green-50 rounded-lg p-4 border border-green-200">
+  <h4
+    class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3 flex items-center"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-5 w-5 mr-2 text-green-600"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+      />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+      />
+    </svg>
+    Location Information
+  </h4>
+
+  <div class="grid md:grid-cols-2 gap-4">
+    <!-- State -->
+    <div>
+      <label class="text-xs font-medium text-gray-500 uppercase">State</label>
+      <p class="text-sm text-gray-900 mt-1 font-medium">
+        {{ selectedSale?.state || '-' }}
+      </p>
+    </div>
+
+    <!-- City -->
+    <div>
+      <label class="text-xs font-medium text-gray-500 uppercase">City</label>
+      <p class="text-sm text-gray-900 mt-1 font-medium">
+        {{ selectedSale?.city || '-' }}
+      </p>
+    </div>
+
+  <!-- Google Map Link -->
+<div class="md:col-span-2">
+  <label class="text-xs font-medium text-gray-500 uppercase">
+    Google Map Location
+  </label>
+
+  <p class="text-sm mt-1 font-medium break-all">
+    <ng-container *ngIf="selectedSale?.mapLink; else noMap">
+      <a
+        [href]="selectedSale.mapLink"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-blue-600 underline hover:text-blue-800"
+      >
+        {{ selectedSale.mapLink }}
+      </a>
+    </ng-container>
+
+    <ng-template #noMap>
+      <span class="text-gray-400">-</span>
+    </ng-template>
+  </p>
+</div>
+
 
         <!-- Timestamp Information -->
         <div class="bg-orange-50 rounded-lg p-4 border border-orange-200">

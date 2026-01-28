@@ -131,26 +131,7 @@
     Longitude: {{ salesForm.value.longitude || 'Fetching...' }}
   </p>
 </div> -->
-<div class="md:col-span-2 bg-gray-50 p-3 rounded border">
-  <p class="text-sm font-medium text-gray-600 mb-2">
-    Area Sales Manager Location
-  </p>
 
-  <button
-    type="button"
-    class="px-3 py-1 mb-2 text-sm bg-blue-600 text-white rounded"
-    (click)="captureLiveLocation()"
-  >
-    Capture Location
-  </button>
-
-  <p class="text-xs text-gray-500">
-    Latitude: {{ salesForm.value.latitude || 'Not captured' }}
-  </p>
-  <p class="text-xs text-gray-500">
-    Longitude: {{ salesForm.value.longitude || 'Not captured' }}
-  </p>
-</div>
 
 
       <!-- Preview Button -->
@@ -182,6 +163,20 @@
         <div><b>Email:</b> {{ salesForm.value.email }}</div>
         <div><b>Status:</b> {{ salesForm.value.status }}</div>
       </div>
+  <!-- Google Maps Location -->
+  <div
+    *ngIf="salesForm.value.mapLink"
+    class="mt-4 text-sm"
+  >
+    <b>Location:</b>
+    <a
+      [href]="salesForm.value.mapLink"
+      target="_blank"
+      class="text-blue-600 underline ml-1"
+    >
+      View on Google Maps
+    </a>
+  </div>
 
       <div class="flex justify-end gap-3 mt-6">
         <button class="btn-edit" (click)="previewMode = false">Edit</button>
